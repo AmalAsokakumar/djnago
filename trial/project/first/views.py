@@ -1,19 +1,25 @@
+import datetime
+from http.client import HTTPResponse
 from django.shortcuts import render
 from django.http import HttpResponse
 
-# Create your views here.
-def home(request):
+def index(request):
+    date = datetime.datetime.now().date()
+    # return render(request, 'index.html',{'data':date})
+    days_of_week = ['mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    return render(request,'index.html',{'date': date , "days_of_week" : days_of_week})
     
-    data =' hai this is my test project '
-    # return HttpResponse('HELLOWORLD')
-    return render(request, 'index.html',{'data':data})
-
-
-# # simple form creation 
-# def form(request):
-#     if request.method == 'GET':
-#         return render(request,'forms.html')
-#     if request.method == 'POST':
-#        text= request.POST.get('text')
-#        return render(request, '',{'data':text})   # here the returning request is kind http://127.0.0.1:8000/forms/form
-# # here it is looking for a url forms/form
+def form(request):
+    if request.method == 'GET':
+        return render(request,'form.html',{})
+        
+    elif request.method == 'POST': 
+        text= request.POST['text']
+        email = request.POST['email']
+        data = [text, email]
+        return render(request,'result.html',{'data': data})
+    
+    
+    
+def result(request):
+    pass                                                                                                      

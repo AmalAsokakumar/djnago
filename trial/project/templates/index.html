@@ -7,10 +7,17 @@
     <title>Document</title>
 </head>
 <body>
+    
 
     {% block content %}
-    
-    {{data}}
+
+    <h1>index.html page </h1>
+
+        {% for day in days_of_week %}
+            {{day}} <br>
+        {% endfor%}
+
+    {{date}}
     
     {% endblock %}
     
