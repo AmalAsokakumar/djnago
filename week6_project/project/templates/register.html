@@ -18,12 +18,12 @@
         <input type="email" name="email" placeholder="email"><br>
         <input type="password" name="password1" placeholder="Password"><br>
         <input type="password" name="password2" placeholder="Confirm Password"><br>
-        <input type="Submit" value='Register'> 
+        <input type="Submit"> 
 
     </form>
 
     <div>
-        {% for message in messages %}
+        {% for message in messages %} <!-- we may have many messages so we can use for loop to print it one by one. -->
         <h3> {{message}}  </h3>
         {% endfor %}
     </div>

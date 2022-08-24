@@ -8,6 +8,29 @@ class destination(models.Model):
     desc = models.TextField()
     price = models.IntegerField()
     offers = models.BooleanField(default=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
 # import string
