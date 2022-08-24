@@ -64,6 +64,13 @@ def login(request):
             return redirect('login')                                    # redirect to the same page 
     else :
         return render(request, 'login.html',{})
+    
+    
+    
+def logout(request):
+    auth.logout(request)
+    return redirect('/') # redirect to home page.
+    
 
 # # Create your views here.
 # def register(request):
