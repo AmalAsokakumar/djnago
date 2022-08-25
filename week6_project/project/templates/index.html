@@ -41,7 +41,7 @@
 
 
 										{% if user.is_authenticated %}
-										<li>Hello, {{user.first_name}}</li>
+										<li>Hello, {{ request.user.username }} </li>
 										<li><a href="users/logout">Logout</a></li>
 										{% else %}	
 										<li><a href="users/register">Register</a></li>
