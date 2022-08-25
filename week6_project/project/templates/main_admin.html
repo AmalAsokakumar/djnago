@@ -12,7 +12,8 @@
                 <th class="table-Active" scope="col">FIRST NAME</th>
                 <th class="table-Active" scope="col">LAST NAME</th>
                 <th class="table-Active" scope="col">USERNAME</th>
-                <th class="table-Active" scope="col">EDIT/DELETE</th>
+                {% comment %} <th class="table-Active" scope="col"><a href="add_user">New User</a></th> {% endcomment %}
+                <td><td> <button type="button" class="btn btn-light text-align-center"><a href="{% url 'add_user' %}"> New User</a></button></td></td>
               </tr>
             </thead>
             <tbody>
@@ -23,8 +24,10 @@
                 <td class="table-Active">{{usr.first_name}}</td>
                 <td class="table-Active">{{usr.last_name}}</td>
                 <td class="table-Active">{{usr.username}}</td>
-                <td class="table-Active"><a href="{% url 'edit_user' usr.id %}">edit</a></td>
-                <td class="table-Active"><a href="{% url 'delete_user' usr.id %}">delete</a></td>
+                {% comment %} <td class="table-Active"><a href="{% url 'edit_user' usr.id %}">edit</a></td> {% endcomment %}
+                {% comment %} <td class="table-Active"><a href="{% url 'delete_user' usr.id %}">delete</a></td> {% endcomment %}
+                <td> <button type="button" class="btn btn-light"><a href="{% url 'edit_user' usr.id %}">edit</a></button></td>
+                <td> <button type="button" class="btn btn-light"><a href="{% url 'delete_user' usr.id %}">delete</a></button> </td>
                 
               </tr>
               {% endfor %}

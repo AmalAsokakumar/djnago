@@ -1,11 +1,10 @@
-from http.client import HTTPResponse
+
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
-# from .forms import RegisterForm
+# from django.db.models import Q
+from .forms import Register_form
 from django.contrib.auth.models import User, auth
-
-
 
 
 
@@ -14,8 +13,7 @@ from django.contrib.auth.models import User, auth
 # register section 
 
 def register(request):
-    
-    
+     
     if request.method == 'POST':
         first_name = request.POST.get('first_name')                      # this should be same name which is used in html 'name' field 
         last_name = request.POST.get('last_name')
@@ -30,9 +28,11 @@ def register(request):
             if User.objects.filter(username=username):                   # here we are comparing the username of database with new user name. 
                 #print("user name taken ")
                 messages.info(request,'User Name Taken')
+                return redirect('register')
             elif User.objects.filter(email=email):                       # here we are comparing the passwords( form database with locally inputted )
                 # print("Email id is taken")
                 messages.info(request,'Email Id Taken')
+                return redirect('register')
             else: 
                 user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password= password1)
                 user.save()                                              # here we are actually inserting user details to the a table which is automatically created by django during the migration "User"
@@ -41,14 +41,12 @@ def register(request):
                 return redirect('login')                                 # after successful register an account we should redirect back to login page.
         else:
             messages.info(request,'Password Not Matching')
-            # print('password not matching ')       
+            # print('password not matching ')   
+            return redirect('register')
+        return redirect('/') 
     else:
-        
-        return render(request, 'register.html',{})
+        return render(request,'register.html',{})
         # return render(request,'register')
-
-
-
 
 
 
@@ -80,12 +78,12 @@ def login(request):
             return redirect('login')                                    # redirect to the same page 
     else :
         return render(request, 'login.html',{})
-    
-    
+
     
 def logout(request):
     auth.logout(request)
     return redirect('/') # redirect to home page.
+
 
 
 
@@ -97,21 +95,83 @@ def main_admin(request):
     context = User.objects.all().order_by('id')      
     return render(request, 'main_admin.html',{'context':context})
   
-
-
-
 def edit_user(request,id):
-    User.objects.filter(id=id).delete()
-    #instance = User.objects.get(id=id) 
-    #instance.delete()
-    
-    return HttpResponse('you can edit now ')
+    add_user = User.objects.get(id=id)
+    form = Register_form(request.POST or None, instance=add_user)
+    if form.is_valid():
+        form.save()
+        return redirect('main_admin')
+    return render(request, 'edit_user.html',{'form':form , 'add_user':add_user})
 
 def delete_user(request,id):
+    User.objects.filter(id=id).delete()
     return redirect('main_admin')
     # return HttpResponse('You can delete users now')
 
 
+def add_user(request):
+         
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')                      # this should be same name which is used in html 'name' field 
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        email = request.POST.get('email')     
+                                                                         # validations to performs 
+                                                                         # 1 password 1 matches with password 2 
+        if password1 == password2:
+                                                                         # 2  username and email id used by current database or not  ( these two are unique field )
+            if User.objects.filter(username=username):                   # here we are comparing the username of database with new user name. 
+                messages.info(request,'User Name Taken')
+                return redirect('register')
+            elif User.objects.filter(email=email):                       # here we are comparing the passwords( form database with locally inputted )
+                messages.info(request,'Email Id Taken')
+                return redirect('register')
+            else: 
+                user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password= password1)
+                user.save()                                              # here we are actually inserting user details to the a table which is automatically created by django during the migration "User"                     # to print a message a user is successfully created 
+                messages.success(request,'User Successfully Created')
+                return redirect('main_admin')                                 # after successful register an account we should redirect back to login page.
+        else:
+            messages.info(request,'Password Not Matching')
+            # print('password not matching ')   
+            return redirect('register')
+        return redirect('/') 
+    else:
+        return render(request,'register.html',{})
+        # return render(request,'register')
+    pass
+#     if request.method == 'POST':
+#         first_name = request.POST.get('first_name')                      # this should be same name which is used in html 'name' field 
+#         last_name = request.POST.get('last_name')
+#         username = request.POST.get('username')
+#         password1 = request.POST.get('password1')
+#         password2 = request.POST.get('password2')
+#         email = request.POST.get('email')     
+#                                                                         # validations to performs 
+#                                                                         # 1 password 1 matches with password 2 
+#         if password1 == password2:
+#                                                                         # 2  username and email id used by current database or not  ( these two are unique field )
+#                 if User.objects.filter(username=username):                   # here we are comparing the username of database with new user name. 
+#                     #print("user name taken ")
+#                     messages.info(request,'User Name Taken')
+#                 elif User.objects.filter(email=email):                       # here we are comparing the passwords( form database with locally inputted )
+#                     # print("Email id is taken")
+#                     messages.info(request,'Email Id Taken')
+#                 else: 
+#                     user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password= password1)
+#                     user.save()                                              # here we are actually inserting user details to the a table which is automatically created by django during the migration "User"
+#                     #print('user created successfully')                      # to print a message a user is successfully created 
+#                     messages.success(request,'User Successfully Created')
+#                     return redirect('main_admin')                                 # after successful register an account we should redirect back to login page.
+#         else:
+#             messages.info(request,'Password Not Matching')
+#             # print('password not matching ')       
+#     else:
+        
+#         return render(request, 'register.html',{})
+#         # return render(request,'register')
 
 
 
