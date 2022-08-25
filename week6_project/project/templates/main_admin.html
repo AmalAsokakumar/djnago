@@ -6,17 +6,17 @@
     <div class="row justify-content-md-center">
         <table class="table table-dark">
             <thead>
-              <tr>
-                <th class="table-Active" scope="col">ID</th>
-                <th class="table-Active" scope="col">EMAIL</th>
-                <th class="table-Active" scope="col">FIRST NAME</th>
-                <th class="table-Active" scope="col">LAST NAME</th>
-                <th class="table-Active" scope="col">USERNAME</th>
+              <tr class="font-weight-bold text-nowrap" style="width: 8rem;">
+                <th class="table-Active" style="width: 8rem;" scope="col">ID</th>
+                <th class="table-Active" scope="col"style="width: 8rem;">EMAIL</th>
+                <th class="table-Active" scope="col"style="width: 8rem;">FIRST NAME</th>
+                <th class="table-Active" scope="col"style="width: 8rem;">LAST NAME</th>
+                <th class="table-Active" scope="col"style="width: 8rem;">USERNAME</th>
 
                 <th>
                     <form action="{% url 'users:search_user' %}" method="get" role="search" >
-                         <input type="search" placeholder="search" name="q" >
-                         <button type='submit'>search</button>
+                         <input type="search" class= "p-1" placeholder="search" name="q" >
+                         <button class="ml-4 btn btn-light"type='submit'>search</button>
                         
                     </form>
                 </th> 
@@ -40,14 +40,13 @@
                 <td class="table-Active">{{usr.username}}</td>
                 {% comment %} <td class="table-Active"><a href="{% url 'edit_user' usr.id %}">edit</a></td> {% endcomment %}
                 {% comment %} <td class="table-Active"><a href="{% url 'delete_user' usr.id %}">delete</a></td> {% endcomment %}
-                <td> <button type="button" class="btn btn-light"><a href="{% url 'users:edit_user' usr.id %}">edit</a></button></td>
-                <td> <button type="button" class="btn btn-light"><a href="{% url 'users:delete_user' usr.id %}">delete</a></button> </td>
+                <td> <button type="button" class="btn btn-light ml-5 pl-4 pr-4"><a href="{% url 'users:edit_user' usr.id %}">edit</a></button></td>
+                <td> <button type="button" class="btn btn-light pl-3 pr-3"><a href="{% url 'users:delete_user' usr.id %}">delete</a></button> </td>
                 
               </tr>
               {% endfor %}
             </tbody>
-          </table>
-          {% endblock %}
-        
+          </table>     
     </div>
 </div>
+{% endblock %}

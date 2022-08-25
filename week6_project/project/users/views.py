@@ -10,6 +10,9 @@ from django.contrib.auth.models import User, auth
 
 
 
+def home(request):
+    return redirect('/')
+
 # register section 
 
 def register(request):
@@ -45,14 +48,23 @@ def register(request):
             return redirect('users:register')
         return redirect('/') 
     else:
-        return render(request,'users:register.html',{})
+        return render(request,'register.html',{})
         # return render(request,'register')
 
 
-
+def local_admin(request):
+    user= request.user
+    if user.is_superuser :                                      # check whether the user is a super user 
+        auth.login(request,user)  
+        return redirect('users:main_admin')
 
 
 # login section and logout section 
+
+
+
+
+
 
 def login(request):
     if request.method == 'POST':
@@ -61,17 +73,17 @@ def login(request):
         
         user = auth.authenticate(username=username, password=password)  # if the same username and password exist this object will be created or else it will be none.
         if user is not None :                                           # check if the object is created
-            if user.is_superuser :                                      # check whether the user is a super user 
-                auth.login(request,user)  
-                return redirect('users:main_admin')
+        #     if user.is_superuser :                                      # check whether the user is a super user 
+        #         auth.login(request,user)  
+        #         return redirect('users:main_admin')
 # initially i was trying to show the admin page here, but due to the csrf token error ( caused because there is a form submission in this page also) so i redirect when the user is a super user. 
                 # we are giving access to the user.
                 #print ('user authentication passed' * 5)                # to check whether it is working in consol output. 
                 #context = User.objects.all().order_by('id')      
                 #return render(request, 'main_admin.html',{'context':context}) # super user admin panel address 
-            else:
-                 auth.login(request,user)                               # we are giving access to the user. 
-                 return redirect('/')                                   # redirect to normal user space 
+            # else:
+            auth.login(request,user)                               # we are giving access to the user. 
+            return redirect('/')                                   # redirect to normal user space 
                                                                         # i have to edit this section and add another checking to find superuser  
         else: 
             messages.info(request,'Invalid Credentials')                # if the login fail. 
@@ -83,9 +95,6 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('/') # redirect to home page.
-
-
-
 
 
 

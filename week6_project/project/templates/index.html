@@ -35,6 +35,9 @@
 									<ul class="d-flex flex-row align-items-start justify-content-start">
 										<li class="active"><a href=''>Home</a></li>
 										<!--<li><a href="contact.html">Contact</a></li> -->
+										{% if user.is_superuser %}
+                                        <li><a href="users/local_admin">Admin</a></li>
+                                        {% endif %}
 
 
 										{% if user.is_authenticated %}
