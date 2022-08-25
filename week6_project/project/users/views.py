@@ -7,6 +7,12 @@ from django.contrib.auth.models import User, auth
 
 
 
+
+
+
+
+# register section 
+
 def register(request):
     
     
@@ -45,6 +51,11 @@ def register(request):
 
 
 
+
+
+
+# login section and logout section 
+
 def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -53,8 +64,10 @@ def login(request):
         user = auth.authenticate(username=username, password=password)  # if the same username and password exist this object will be created or else it will be none.
         if user is not None :                                           # check if the object is created
             if user.is_superuser :                                      # check whether the user is a super user 
-                auth.login(request,user)                                # we are giving access to the user. 
-                return redirect('/')                                    # super user admin panel address 
+                auth.login(request,user)                                # we are giving access to the user.
+                #print ('user authentication passed' * 5)                # to check whether it is working in consol output. 
+                context = User.objects.all().order_by('id')      
+                return render(request, 'main_admin.html',{'context':context}) # super user admin panel address 
             else:
                  auth.login(request,user)                               # we are giving access to the user. 
                  return redirect('/')                                   # redirect to normal user space 
@@ -70,7 +83,51 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('/') # redirect to home page.
+
+
+
+
+
+# admin pannel 
     
+def main_admin(request):
+    #if request.method == 'POST':
+    return render(request, 'main_admin.html')
+
+
+
+def edit_user(request,id):
+    User.objects.filter(id=id).delete()
+    #instance = User.objects.get(id=id) 
+    #instance.delete()
+    
+    return HttpResponse('you can edit now ')
+
+def delete_user(request,id):
+    return HttpResponse('You can delete users now')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # # Create your views here.
 # def register(request):
