@@ -64,10 +64,13 @@ def login(request):
         user = auth.authenticate(username=username, password=password)  # if the same username and password exist this object will be created or else it will be none.
         if user is not None :                                           # check if the object is created
             if user.is_superuser :                                      # check whether the user is a super user 
-                auth.login(request,user)                                # we are giving access to the user.
+                auth.login(request,user)  
+                return redirect('main_admin')
+# initially i was trying to show the admin page here, but due to the csrf token error ( caused because there is a form submission in this page also) so i redirect when the user is a super user. 
+                # we are giving access to the user.
                 #print ('user authentication passed' * 5)                # to check whether it is working in consol output. 
-                context = User.objects.all().order_by('id')      
-                return render(request, 'main_admin.html',{'context':context}) # super user admin panel address 
+                #context = User.objects.all().order_by('id')      
+                #return render(request, 'main_admin.html',{'context':context}) # super user admin panel address 
             else:
                  auth.login(request,user)                               # we are giving access to the user. 
                  return redirect('/')                                   # redirect to normal user space 
@@ -88,11 +91,12 @@ def logout(request):
 
 
 
-# admin pannel 
+# admin panel to show the user data 
     
 def main_admin(request):
-    #if request.method == 'POST':
-    return render(request, 'main_admin.html')
+    context = User.objects.all().order_by('id')      
+    return render(request, 'main_admin.html',{'context':context})
+  
 
 
 
@@ -104,7 +108,8 @@ def edit_user(request,id):
     return HttpResponse('you can edit now ')
 
 def delete_user(request,id):
-    return HttpResponse('You can delete users now')
+    return redirect('main_admin')
+    # return HttpResponse('You can delete users now')
 
 
 
