@@ -7,7 +7,7 @@ from .forms import Register_form
 from django.contrib.auth.models import User, auth
 
 
-from multiprocessing.managers import BaseListProxy
+# from multiprocessing.managers import BaseListProxy
 from django.views.decorators.cache import cache_control
 
 
@@ -59,32 +59,35 @@ def register(request):
         return render(request,'register.html',{})
         # return render(request,'register')
 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def local_admin(request):
-    if 'username' in request.session:
+    # if 'username' in request.session:
         user= request.user
         if user.is_superuser :                                      # check whether the user is a super user 
-            auth.login(request,user)  
+            # auth.login(request,user)  
             return redirect('users:main_admin')
-    else:
-        return redirect('users:login')
+    # else:
+        # return redirect('users:login')
 
 # login section and logout section 
 
 
 
 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+
 def login(request):
-    if 'username' in request.session:
-        return redirect('/')
+    # user_name = 'not logged in'
+    # if 'username' in request.session:  #section
+    #     return redirect('index')         #section
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         
         user = auth.authenticate(username=username, password=password)  # if the same username and password exist this object will be created or else it will be none.
         if user is not None :                                           # check if the object is created
-            request.session['username'] = username
+            #request.session['username'] = username #section 
+            # user_name = request.post['username']
+            # request.session['username'] = user_name
             auth.login(request,user)                               # we are giving access to the user. 
             return redirect('/')                                   # redirect to normal user space 
                                                                         # i have to edit this section and add another checking to find superuser  
@@ -94,48 +97,52 @@ def login(request):
     else :
         return render(request, 'login.html',{})
 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)   
+#@cache_control(no_cache=True, must_revalidate=True, no_store=True)   # section 
 def logout(request):
-    if 'username' in request.session:
-        request.session.flush()
+    # if 'username' in request.session:
+    # try:
+    #     del request.session['username']
+    # except :
+    #     pass
+        # request.session.flush()    # section 
     auth.logout(request)
     return redirect('users:login') # redirect to home page.
 
 
 
 # admin panel to show the user data 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)  
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)  
 def main_admin(request):
-    if 'username' in request.session:
+    # if 'username' in request.session:
         context = User.objects.all().order_by('id')      
         return render(request, 'main_admin.html',{'context':context})
-    else:
-        return redirect('users:login')
+    # else:
+        # return redirect('users:login')
     
-@cache_control(no_cache=True, must_revalidate=True, no_store=True) 
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True) 
 def edit_user(request,id):
-    if 'username' in request.session:
+    # if 'username' in request.session:
         add_user = User.objects.get(id=id)
         form = Register_form(request.POST or None, instance=add_user)
         if form.is_valid():
             form.save()
             return redirect('users:main_admin')
         return render(request, 'edit_user.html',{'form':form , 'add_user':add_user})
-    else:
-        return redirect('users:login')
+    # else:
+    #    return redirect('users:login')
 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_user(request,id):
-    if 'username' in request.session:
+    # if 'username' in request.session:
         User.objects.filter(id=id).delete()
         return redirect('users:main_admin')
         # return HttpResponse('You can delete users now')
-    else:
-        return redirect('users:login')          
+    # else:
+        # return redirect('users:login')          
         
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_user(request):
-    if 'username' in request.session:
+    # if 'username' in request.session:
         if request.method == 'POST':
             first_name = request.POST.get('first_name')                      # this should be same name which is used in html 'name' field 
             last_name = request.POST.get('last_name')
@@ -165,20 +172,20 @@ def add_user(request):
             return redirect('/') 
         else:
             return render(request,'register.html',{})
-    else:
+    # else:
         return redirect('users:login')
 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def search_user(request):
-    if 'username' in request.session:
+    # if 'username' in request.session:
         users=None
         query=None
         if 'q' in request.GET:
             query=request.GET.get('q')
             users=User.objects.all().filter(Q(first_name__contains=query) | Q(last_name__contains=query) | Q(email__contains=query) | Q(username__contains=query))
             return render(request,'search.html', {'query': query, 'context': users})
-    else:
-        return redirect('users:login')
+    # else:
+        # return redirect('users:login')
 
 
 
