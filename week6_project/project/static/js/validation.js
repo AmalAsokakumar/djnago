@@ -1,6 +1,9 @@
 $(document).ready(function(){
     $("#register-form").validate({
         rules:{
+            username:{
+                required:true
+            },
             first_name:{
                 required:true,
                 minlength:4
